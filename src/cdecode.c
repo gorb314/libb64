@@ -26,6 +26,7 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 {
 	const char* codechar = code_in;
 	char* plainchar = plaintext_out;
+	int value;
 	char fragment;
 	
 	*plainchar = state_in->plainchar;
@@ -42,8 +43,9 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 					state_in->plainchar = *plainchar;
 					return plainchar - plaintext_out;
 				}
-				fragment = (char)base64_decode_value(*codechar++);
-			} while (fragment < 0);
+				value = base64_decode_value(*codechar++);
+				fragment = (char)value;
+			} while (value < 0);
 			*plainchar    = (fragment & 0x03f) << 2;
 	case step_b:
 			do {
@@ -53,8 +55,9 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 					state_in->plainchar = *plainchar;
 					return plainchar - plaintext_out;
 				}
-				fragment = (char)base64_decode_value(*codechar++);
-			} while (fragment < 0);
+				value = base64_decode_value(*codechar++);
+				fragment = (char)value;
+			} while (value < 0);
 			*plainchar++ |= (fragment & 0x030) >> 4;
 			*plainchar    = (fragment & 0x00f) << 4;
 	case step_c:
@@ -65,8 +68,9 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 					state_in->plainchar = *plainchar;
 					return plainchar - plaintext_out;
 				}
-				fragment = (char)base64_decode_value(*codechar++);
-			} while (fragment < 0);
+				value = base64_decode_value(*codechar++);
+				fragment = (char)value;
+			} while (value < 0);
 			*plainchar++ |= (fragment & 0x03c) >> 2;
 			*plainchar    = (fragment & 0x003) << 6;
 	case step_d:
@@ -77,8 +81,9 @@ int base64_decode_block(const char* code_in, const int length_in, char* plaintex
 					state_in->plainchar = *plainchar;
 					return plainchar - plaintext_out;
 				}
-				fragment = (char)base64_decode_value(*codechar++);
-			} while (fragment < 0);
+				value = base64_decode_value(*codechar++);
+				fragment = (char)value;
+			} while (value < 0);
 			*plainchar++   |= (fragment & 0x03f);
 		}
 	}
